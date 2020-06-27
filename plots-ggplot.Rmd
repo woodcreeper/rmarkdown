@@ -7,4 +7,86 @@ output: html_document
 
 # Plots with ggplot2
 
-We are going to make plots in R and it's going to be awesome!
+# Get them libraries loaded
+```{r echo=FALSE}
+library(tidyverse)
+library(readxl)
+library(here)
+```
+
+# Read CSV
+
+```{r}
+ca_np <- read_csv(here("data", "ca_np.csv"))
+```
+
+# Read Excel
+
+```{r}
+ci_np <- read_excel(here("data","ci_np.xlsx"))
+names(ci_np)
+```
+
+To create a bare-bones ggplot graph, we need to tell R three basic things:
+
+1. We’re using ggplot2::ggplot()
+2. Data we’re using & variables we’re plotting (i.e., what is x and/or y?)
+3. What type of graph we’re making (the type of geom)
+
+Generally, that structure will look like this:
+
+```{r}
+gg_base <- ggplot(data = ci_np, aes(x = year, y = visitors))
+
+gg_base + geom_line()
+```
+```{r}
+gg_base + geom_point()
+```
+
+```{r}
+gg_base + geom_point() + geom_line()
+```
+
+```{r}
+gg_base + geom_col()
+```
+
+```{r}
+gg_base + geom_area()
+```
+
+First, we’ll customize some aesthetics (e.g. colors, styles, axis labels, etc.) of our graphs based on non-variable values.
+
+We can change the aesthetics of elements in a ggplot graph by adding arguments within the layer where that element is created.
+
+Some common arguments we’ll use first are:
+
+* color = or colour =: update point or line colors
+* fill =: update fill color for objects with areas
+* linetype =: update the line type (dashed, long dash, etc.)
+* pch =: update the point style
+* size =: update the element size (e.g. of points or line thickness)
+* alpha =: update element opacity (1 = opaque, 0 = transparent)
+
+```{r}
+gg_base + geom_line(
+  color = "purple"
+)
+```
+
+```{r}
+gg_base + 
+  geom_point(
+    aes(size = visitors,
+        color = visitors),
+    alpha = 0.5
+)
+```
+
+```{r}
+gg_base + 
+  geom_col(
+    aes(color = visitors)
+)
+```
