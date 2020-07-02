@@ -1,0 +1,78 @@
+---
+title: "Programming The Radios"
+---
+
+# Step 1: Setting up Arduino IDE
+1. Using your favorite browser, navigate to arduino.cc
+2. From the main page, select Software > Downloads
+3. Download the Arduino IDE
+4. In the window for “Additional Boards Manager URLs” paste the following:
+```
+https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+```
+
+5. Now go to Tools > Board “xxx” > Boards Manager
+
+6. Connect the USBtinyISP device to your compute using a USB cable. 
+
+7. Go to Tools > Programmer and select “USBtinyISP”
+
+8. Install the latest version of Adafruit AVR Boards
+
+9. Now the Adafruit boards will appear un the Tools > Board:”xxx” menu…choose Adafruit Feather 32u4
+
+*At this point you are almost ready to connect the adapter on the USBtinyISP to the header on the SensorStation radios and burn the new bootloader on each radio, but first we have a little prep work to do…*
+
+# Step 2: Prepping your SensorStation for updating the radios
+
+1. Ensure the SensorStation is OFF, and the power has been disconnected.
+2. Remove the Raspberry Pi module by carefully pushing apart the tabs holding the Pi in place. This will cause the Pi to pop out at an angle from the top of the Pi (the bottom is hinged), at which point you can remove it by pulling up at an angle. (video link: https://i.imgur.com/k9pLM1W.gifv)
+
+3. Set the Raspberry Pi aside.
+
+# Step 3: Burning the Bootloader on the Radios
+
+1. Place the adapter pins into the holes on the header for radio 
+	2. You will need to apply some downward pressure to ensure a connection to the header. (video link: https://i.imgur.com/VulZCbW.gifv)
+2. With the adapter connected to the header, from the Tools menu on the Arduino IDE click Burn Bootloader.
+3. At this point you will see dialogue on the Arduino IDE interface indicating that the Bootloader is being burned on to the radio. This should take less than a minute for each radio. Once it is complete, the radio light will be pulsing red. 
+4. Repeat steps 3.1 - 3.3 for each of the remaining four 434MHz radios
+
+**You’re done!…well, almost…**
+
+# Step 4: Running the Radio Update Software
+
+Now that the radios are reprogrammed, you will need to SSH into your SensorStation, so...
+
+1. reconnect the power and connect to your station via the Ethernet adapter, or by plugging it into a router and accessing the IP over your local internet.
+
+2. Download the following three files from xxx:
+
+`ssr_v2_3_1.ino.hex`
+`program-radio.sh`
+`program-radios_sh.sh`
+
+3. Using the PowerShell Command Prompt (PC) or Terminal (Mac) and assuming you have downloaded the files to your Downloads folder, enter the following:
+
+```
+cd ~/Downloads
+scp ssr_v2_3_1.ino.hex pi@sensorstation.local:/home/pi/
+scp program-radio.sh pi@sensorstation.local:/home/pi/
+scp program-radios_sh.sh pi@sensorstation.local:/home/pi/program-radios.sh
+ssh pi@raspberrypi.local 
+sudo su
+mv ./program-radio.sh /usr/sbin/program-radio
+chmod a+x /usr/sbin/program-radio
+chmod a+x ./program-radios.sh
+./program-radios.sh ./ssr_v2_3_1.ino.hex
+```
+
+**You should now see your radio lights now switch off, and only blink when detecting tags.**
+
+# Step 5: Flashing a Compute Module for a SensorStation
+
+Now that you’ve updated the radios, you’ll need to update your SensorStation to detect the newer tags and nodes.
+
+You can use the Sensor Station to burn a new operating system onto the compute module using a micro USB cable attached to your computer.
+
+Please follow the directions here to do so: https://account.celltracktech.com/station/instructions/

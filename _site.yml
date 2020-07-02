@@ -1,0 +1,8 @@
+name: "my-website"
+navbar:
+  title: "Updating Your Radios"
+  left:
+    - text: "Getting Started"
+      href: index.html
+    - text: "Flashing your Compute Module"
+      href: about.html

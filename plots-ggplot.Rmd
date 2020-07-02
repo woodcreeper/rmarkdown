@@ -111,22 +111,24 @@ gg_np +
 
 #ggsave(here("figures", "np_graph.png"), dpi = 300, width = 10)
 ```
+# Read in Archbold Node health reports
+
 ```{r}
-nodeHealth <- read_csv(here("data", "station-health-data.merged.2020-06-26_215945.csv"))
+archNodeHealth <- read_csv(here("data", "arch_station-health-data.merged.2020-06-26_204438.csv"))
 ```
 ```{r}
-gg_node <- ggplot(data = nodeHealth, aes(x = Time, y = Battery, group = NodeId)) +
+gg_archNode <- ggplot(data = archNodeHealth, aes(x = Time, y = Battery, group = NodeId)) +
   geom_line()
 ```
 
 ```{r}
-gg_node +
+gg_archNode +
   geom_line(show.legend = FALSE) +
   theme_light() + 
   labs(x = "Date", y = "Battery Voltage") +
   facet_wrap(~ NodeId)
 
-#ggsave(here("figures", "np_graph.png"), dpi = 300, width = 10)
+ggsave(here("figures", "np_graph.png"), dpi = 300, width = 10)
 ```
 ```{r}
 rawbeeps <- read_csv(here("data", "station-beep-data.merged.2020-06-26_215945.csv"))
